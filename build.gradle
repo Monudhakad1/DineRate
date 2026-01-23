@@ -49,4 +49,3 @@ bootJar {
     archiveFileName = 'dinerate-backend.jar'
 }
 
-ext { mapstructVersion = "1.5.5.Final" }
