@@ -1,9 +1,10 @@
-package com.dinerate.elastic.dinerate_backened.domains.entities;
+package com.dinerate.elastic.dinerate_backened.domains;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

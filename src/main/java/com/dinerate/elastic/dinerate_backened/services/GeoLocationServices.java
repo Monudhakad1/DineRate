@@ -1,7 +1,7 @@
 package com.dinerate.elastic.dinerate_backened.services;
 
 import com.dinerate.elastic.dinerate_backened.domains.entities.Address;
-import com.dinerate.elastic.dinerate_backened.domains.entities.GeoLocation;
+import com.dinerate.elastic.dinerate_backened.domains.GeoLocation;
 
 public interface GeoLocationServices {
 

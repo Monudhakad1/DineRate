@@ -47,7 +47,7 @@ public class Restaurants {
 
 
     @Field(type= FieldType.Object)
-    private TimeRanges operatingHours;
+    private OperatingHours operatingHours;
 
     @Field(type= FieldType.Nested)
     private List<Photo>photos;

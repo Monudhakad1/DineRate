@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor  // don't use @data in entity due to cyclic issue in elasticsearch
-public class operatingHours {
+public class OperatingHours {
 
     @Field(type= FieldType.Nested)
     private TimeRanges Sunday;

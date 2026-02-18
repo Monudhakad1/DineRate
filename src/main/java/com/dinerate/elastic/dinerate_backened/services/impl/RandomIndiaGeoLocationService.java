@@ -1,7 +1,7 @@
 package com.dinerate.elastic.dinerate_backened.services.impl;
 
 import com.dinerate.elastic.dinerate_backened.domains.entities.Address;
-import com.dinerate.elastic.dinerate_backened.domains.entities.GeoLocation;
+import com.dinerate.elastic.dinerate_backened.domains.GeoLocation;
 import com.dinerate.elastic.dinerate_backened.services.GeoLocationServices;
 import org.springframework.stereotype.Service;
 
