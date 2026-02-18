@@ -14,9 +14,9 @@ import java.util.List;
 public class RestaurantSummaryDto {
     private String id;
     private String name;
-    private String cusineType;
+    private String cuisineType;
     private Float averageRating;
-    private Integer reviewCount;
+    private Integer totalReviews;
     private AddressDto address;
     private List<PhotoDto> photos;
 }

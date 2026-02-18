@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Data @NoArgsConstructor @AllArgsConstructor
@@ -33,5 +34,7 @@ public class RestaurantsDTO {
     private List<PhotoDto> photos;
 
     private UserDto createdBy;
+
+    private Integer totalReviews;
 
 }

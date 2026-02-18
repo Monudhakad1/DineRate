@@ -15,21 +15,24 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE )
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RestaurantsMapper {
-    RestaurantCreateUpdateRequest toRestaurantCreateUpdateRequest(RestaurantCreateUpdateRequestDTO restaurantCreateUpdateRequestDTO);
 
+    RestaurantCreateUpdateRequest toRestaurantCreateUpdateRequest(
+            RestaurantCreateUpdateRequestDTO restaurantCreateUpdateRequestDTO);
+
+    @Mapping(source = "reviews", target = "totalReviews", qualifiedByName = "populateTotalReviews")
     RestaurantsDTO toRestaurantsDTO(Restaurants restaurants);
 
+    @Mapping(source = "reviews", target = "totalReviews", qualifiedByName = "populateTotalReviews")
     RestaurantSummaryDto toRestaurantSummaryDto(Restaurants restaurants);
 
     @Named("populateTotalReviews")
-    private Integer populateTotalReviews(List<Review> reviews){
-        return reviews.size();
+    default Integer populateTotalReviews(List<Review> reviews) {
+        return reviews == null ? 0 : reviews.size();
     }
 
     @Mapping(target = "latitude", source = "lat")
     @Mapping(target = "longitude", source = "lon")
     GeoPointDto toGeoPointDto(GeoPoint geoPoint);
-
 }

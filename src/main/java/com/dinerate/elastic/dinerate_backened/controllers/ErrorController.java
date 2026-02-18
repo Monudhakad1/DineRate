@@ -2,6 +2,7 @@ package com.dinerate.elastic.dinerate_backened.controllers;
 
 import com.dinerate.elastic.dinerate_backened.domains.dtos.ErrorDto;
 import com.dinerate.elastic.dinerate_backened.exceptions.RestaurantNotFoundException;
+import com.dinerate.elastic.dinerate_backened.exceptions.ReviewNotAllowedException;
 import com.dinerate.elastic.dinerate_backened.exceptions.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,21 @@ public class ErrorController {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(ReviewNotAllowedException.class)  //handles: duplicates,consistent errors
+    public ResponseEntity<ErrorDto> handleReviewNotAllowedException(ReviewNotAllowedException ex) {
+
+        log.error("Review not allowed", ex);
+
+        ErrorDto errorDto = ErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errorDto);
     }
 }
