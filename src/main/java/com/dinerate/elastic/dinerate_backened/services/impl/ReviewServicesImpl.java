@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -84,6 +81,55 @@ public class ReviewServicesImpl implements ReviewServices {
         return new PageImpl<>(reviews.subList(start, end), pageable, reviews.size());
     }
 
+    @Override
+    public Optional<Review> getReview(String restaurantId, String reviewId) {
+        Restaurants restaurants= restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        return restaurants.getReviews().stream().filter(r -> reviewId.equals(r.getId())).
+                findFirst();
+
+    }
+
+    @Override
+    public Review updateReview(User author, String restaurantId, String reviewId, ReviewCreateUpdateRequest review) {
+        Restaurants restaurants= restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+            Review existingReview= restaurants.getReviews().stream()
+                .filter(r -> reviewId.equals(r.getId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+        if (!author.getId().equals(existingReview.getWrittenBy().getId())) {
+            throw new ReviewNotAllowedException("User is not the author of this review");
+        }
+        if(LocalDateTime.now().isAfter(existingReview.getPostedDate().plusHours(48))) {
+            throw new ReviewNotAllowedException("Review can only be edited within 48 hours of posting");
+        }
+        existingReview.setContent(review.getContent());
+        existingReview.setRating(review.getRating());
+        existingReview.setLastEdited(LocalDateTime.now());
+        List<Photo> photos = review.getPhotoUrls().stream().map(url -> Photo.builder
+                ().url(url).uploadedTime(LocalDateTime.now()).build()).toList();
+        existingReview.setPhotos(photos);
+        updateRestaurantAverageRating(restaurants);
+        restaurantRepository.save(restaurants);
+        return existingReview;
+    }
+
+    @Override
+    public void deleteReview(User author, String restaurantId, String reviewId) {
+        Restaurants restaurants= restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        Review existingReview= restaurants.getReviews().stream()
+                .filter(r -> reviewId.equals(r.getId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+        if (!author.getId().equals(existingReview.getWrittenBy().getId())) {
+            throw new ReviewNotAllowedException("User is not the author of this review");
+        }
+        if(LocalDateTime.now().isAfter(existingReview.getPostedDate().plusHours(48))) {
+            throw new ReviewNotAllowedException("Review can only be deleted within 48 hours of posting");
+        }
+        restaurants.getReviews().remove(existingReview);
+        updateRestaurantAverageRating(restaurants);
+    }
+
 
     //method to update average rating
     private void updateRestaurantAverageRating(Restaurants restaurants) {
@@ -96,4 +142,5 @@ public class ReviewServicesImpl implements ReviewServices {
         }
         restaurantRepository.save(restaurants);
     }
+
 }
